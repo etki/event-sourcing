@@ -1,10 +1,13 @@
-# Project in development
+# Java 8 event sourcing framework
 
-Hi.
+[![Build Status](https://travis-ci.org/etki/event-sourcing.svg?branch=dev)](https://travis-ci.org/etki/event-sourcing)
 
-This repository will (i hope) contain simple framework for event 
-sourcing operations.
+## What does this project do?
 
-Currently it does not yet.
+This project is aimed to provide simple and easy event sourcing pattern
+integration in 
 
-Stay tuned!
+## Is there anything CQRSish inside?
+
+No, this project is not aimed for direct CQRS support. There are some 
+caveats i'm not ready to handle.
