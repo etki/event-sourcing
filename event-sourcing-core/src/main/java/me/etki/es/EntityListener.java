@@ -9,5 +9,5 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface EntityListener<E, ID> {
 
-    CompletableFuture<Void> accept(Entity<E, ID> entity, Transition<E, ID> transition);
+    CompletableFuture<Void> accept(Entity<E, ID> entity, Event<E, ID> event);
 }

@@ -10,6 +10,10 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CompletableFutures {
 
+    public static final CompletableFuture<Void> VOID = completed(null);
+    public static final CompletableFuture<Boolean> FALSE = completed(false);
+    public static final CompletableFuture<Boolean> TRUE = completed(true);
+
     public static <T> CompletableFuture<T> completed(T item) {
         return CompletableFuture.completedFuture(item);
     }
@@ -26,5 +30,10 @@ public class CompletableFutures {
         } catch (Throwable throwable) {
             return exceptional(throwable);
         }
+    }
+
+    public static <T> CompletableFuture<T> pipe(CompletableFuture<T> source, CompletableFuture<T> target) {
+        source.thenApply(target::complete).exceptionally(target::completeExceptionally);
+        return target;
     }
 }
