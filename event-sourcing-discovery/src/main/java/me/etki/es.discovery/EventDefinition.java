@@ -1,4 +1,4 @@
-package me.etki.es;
+package me.etki.es.discovery;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,7 +26,7 @@ public @interface EventDefinition {
      * implement Event of next version having two versions of event structure simultaneously, while maintaining backward
      * compatibility.
      *
-     * See {@link DeprecatedTransition} for read repair mechanism implementation.
+     * See {@link me.etki.es.DeprecatedTransition} for read repair mechanism implementation.
      *
      * @return Event version
      */

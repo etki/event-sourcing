@@ -1,9 +1,11 @@
-package me.etki.es;
+package me.etki.es.discovery;
 
 /**
  * @author Etki {@literal <etki@etki.name>}
  * @version %I%, %G%
  * @since 0.1.0
  */
-public interface EntityPostProcessor {
+public @interface EntityDefinition {
+
+    String type();
 }
