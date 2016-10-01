@@ -5,7 +5,7 @@
 ## What does this project do?
 
 This project is aimed to provide simple and easy event sourcing pattern
-integration in 
+integration in any project that needs it.
 
 ## Is there anything CQRSish inside?
 
