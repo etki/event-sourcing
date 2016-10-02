@@ -1,6 +1,11 @@
 package me.etki.es;
 
-import me.etki.es.storage.Serializer;
+import me.etki.es.container.EntityDirectorSettings;
+import me.etki.es.engine.EntityRegistry;
+import me.etki.es.store.EventStorageSettings;
+import me.etki.es.store.SerializedEventStore;
+import me.etki.es.store.SerializedSnapshotStore;
+import me.etki.es.store.Serializer;
 
 /**
  * @author Etki {@literal <etki@etki.name>}
@@ -10,9 +15,19 @@ import me.etki.es.storage.Serializer;
 public class EntityDirectorBuilder {
 
     private EntityRegistry registry = new EntityRegistry();
-    private long snapshotThreshold = 25;
-    private boolean automaticRepair = true;
-    private boolean awaitListeners = true;
+    private EntityDirectorSettings entityDirectorSettings = new EntityDirectorSettings();
+    private EventStorageSettings eventStorageSettings = new EventStorageSettings();
     private Serializer serializer;
-    private boolean propagateListenerExceptions = false;
+    private SerializedEventStore eventStore;
+    private SerializedSnapshotStore snapshotStore;
+
+    public EntityDirectorBuilder reset() {
+        registry = new EntityRegistry();
+        entityDirectorSettings = new EntityDirectorSettings();
+        eventStorageSettings = new EventStorageSettings();
+        serializer = null;
+        eventStore = null;
+        snapshotStore = null;
+        return this;
+    }
 }

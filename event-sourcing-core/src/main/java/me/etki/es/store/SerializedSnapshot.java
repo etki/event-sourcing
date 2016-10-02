@@ -1,6 +1,6 @@
-package me.etki.es.storage;
+package me.etki.es.store;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * @author Etki {@literal <etki@etki.name>}
@@ -13,9 +13,9 @@ public class SerializedSnapshot {
     private String entityId;
     private long entityVersion;
     private String serializedEntity;
-    private Instant transitionedAt;
-    private Instant transitionAcknowledgedAt;
-    private Instant takenAt;
+    private ZonedDateTime transitionedAt;
+    private ZonedDateTime transitionAcknowledgedAt;
+    private ZonedDateTime takenAt;
 
     public String getEntityType() {
         return entityType;
@@ -53,29 +53,29 @@ public class SerializedSnapshot {
         return this;
     }
 
-    public Instant getTransitionedAt() {
+    public ZonedDateTime getTransitionedAt() {
         return transitionedAt;
     }
 
-    public SerializedSnapshot setTransitionedAt(Instant transitionedAt) {
+    public SerializedSnapshot setTransitionedAt(ZonedDateTime transitionedAt) {
         this.transitionedAt = transitionedAt;
         return this;
     }
 
-    public Instant getTransitionAcknowledgedAt() {
+    public ZonedDateTime getTransitionAcknowledgedAt() {
         return transitionAcknowledgedAt;
     }
 
-    public SerializedSnapshot setTransitionAcknowledgedAt(Instant transitionAcknowledgedAt) {
+    public SerializedSnapshot setTransitionAcknowledgedAt(ZonedDateTime transitionAcknowledgedAt) {
         this.transitionAcknowledgedAt = transitionAcknowledgedAt;
         return this;
     }
 
-    public Instant getTakenAt() {
+    public ZonedDateTime getTakenAt() {
         return takenAt;
     }
 
-    public SerializedSnapshot setTakenAt(Instant takenAt) {
+    public SerializedSnapshot setTakenAt(ZonedDateTime takenAt) {
         this.takenAt = takenAt;
         return this;
     }

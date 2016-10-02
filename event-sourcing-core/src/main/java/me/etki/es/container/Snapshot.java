@@ -1,6 +1,6 @@
-package me.etki.es;
+package me.etki.es.container;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * @author Etki {@literal <etki@etki.name>}
@@ -9,28 +9,28 @@ import java.time.Instant;
  */
 public class Snapshot<E, ID> {
 
-    private Class<E> entityClass;
-    private ID entityId;
+    private EntityType<E> entityType;
+    private EntityId<ID> entityId;
     private E entity;
-    private long entityVersion;
-    private Instant transitionedAt;
-    private Instant transitionAcknowledgedAt;
-    private Instant takenAt;
+    private long entityVersion = 0;
+    private ZonedDateTime transitionedAt;
+    private ZonedDateTime transitionAcknowledgedAt;
+    private ZonedDateTime takenAt;
 
-    public Class<E> getEntityClass() {
-        return entityClass;
+    public EntityType<E> getEntityType() {
+        return entityType;
     }
 
-    public Snapshot<E, ID> setEntityClass(Class<E> entityClass) {
-        this.entityClass = entityClass;
+    public Snapshot<E, ID> setEntityType(EntityType<E> entityType) {
+        this.entityType = entityType;
         return this;
     }
 
-    public ID getEntityId() {
+    public EntityId<ID> getEntityId() {
         return entityId;
     }
 
-    public Snapshot<E, ID> setEntityId(ID entityId) {
+    public Snapshot<E, ID> setEntityId(EntityId<ID> entityId) {
         this.entityId = entityId;
         return this;
     }
@@ -53,29 +53,29 @@ public class Snapshot<E, ID> {
         return this;
     }
 
-    public Instant getTransitionedAt() {
+    public ZonedDateTime getTransitionedAt() {
         return transitionedAt;
     }
 
-    public Snapshot<E, ID> setTransitionedAt(Instant transitionedAt) {
+    public Snapshot<E, ID> setTransitionedAt(ZonedDateTime transitionedAt) {
         this.transitionedAt = transitionedAt;
         return this;
     }
 
-    public Instant getTransitionAcknowledgedAt() {
+    public ZonedDateTime getTransitionAcknowledgedAt() {
         return transitionAcknowledgedAt;
     }
 
-    public Snapshot<E, ID> setTransitionAcknowledgedAt(Instant transitionAcknowledgedAt) {
+    public Snapshot<E, ID> setTransitionAcknowledgedAt(ZonedDateTime transitionAcknowledgedAt) {
         this.transitionAcknowledgedAt = transitionAcknowledgedAt;
         return this;
     }
 
-    public Instant getTakenAt() {
+    public ZonedDateTime getTakenAt() {
         return takenAt;
     }
 
-    public Snapshot<E, ID> setTakenAt(Instant takenAt) {
+    public Snapshot<E, ID> setTakenAt(ZonedDateTime takenAt) {
         this.takenAt = takenAt;
         return this;
     }

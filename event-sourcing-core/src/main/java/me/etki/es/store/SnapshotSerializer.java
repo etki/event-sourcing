@@ -1,8 +1,9 @@
-package me.etki.es.storage;
+package me.etki.es.store;
 
-import me.etki.es.EntityDescriptor;
-import me.etki.es.EntityRegistry;
-import me.etki.es.Snapshot;
+import me.etki.es.container.EntityDescriptor;
+import me.etki.es.container.EntityId;
+import me.etki.es.engine.EntityRegistry;
+import me.etki.es.container.Snapshot;
 import me.etki.es.concurrent.CompletableFutures;
 
 import java.io.IOException;
@@ -56,10 +57,9 @@ public class SnapshotSerializer {
     }
 
     private <E, ID> SerializedSnapshot serializeInternal(Snapshot<E, ID> snapshot) throws IOException {
-        EntityDescriptor<E, ID> descriptor = registry.getDescriptor(snapshot.getEntityClass());
         return new SerializedSnapshot()
-                .setEntityType(descriptor.getEntityType())
-                .setEntityId(descriptor.getIdentifierConverter().encode(snapshot.getEntityId()))
+                .setEntityType(snapshot.getEntityType().getEntityType())
+                .setEntityId(snapshot.getEntityId().getEncodedId())
                 .setEntityVersion(snapshot.getEntityVersion())
                 .setSerializedEntity(serializer.serialize(snapshot.getEntity()))
                 .setTransitionedAt(snapshot.getTransitionedAt())
@@ -69,10 +69,12 @@ public class SnapshotSerializer {
 
     private <E, ID> Snapshot<E, ID> deserializeInternal(SerializedSnapshot snapshot) throws IOException {
         EntityDescriptor<E, ID> descriptor = registry.getDescriptor(snapshot.getEntityType());
+        E entity = serializer.deserialize(snapshot.getSerializedEntity(), descriptor.getEntityType().getEntityClass());
+        ID id = descriptor.getIdentifierConverter().decode(snapshot.getEntityId());
         return new Snapshot<E, ID>()
-                .setEntityClass(descriptor.getEntityClass())
-                .setEntityId(descriptor.getIdentifierConverter().decode(snapshot.getEntityId()))
-                .setEntity(serializer.deserialize(snapshot.getSerializedEntity(), descriptor.getEntityClass()))
+                .setEntityType(descriptor.getEntityType())
+                .setEntityId(new EntityId<>(id, snapshot.getEntityId()))
+                .setEntity(entity)
                 .setEntityVersion(snapshot.getEntityVersion())
                 .setTransitionedAt(snapshot.getTransitionedAt())
                 .setTransitionAcknowledgedAt(snapshot.getTransitionAcknowledgedAt())

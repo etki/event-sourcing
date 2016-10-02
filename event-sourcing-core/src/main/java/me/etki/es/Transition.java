@@ -1,5 +1,9 @@
 package me.etki.es;
 
+import me.etki.es.container.EntityDescriptor;
+import me.etki.es.container.Event;
+import me.etki.es.container.TransitionContext;
+
 /**
  * Single entity state mutation.
  *
@@ -30,5 +34,5 @@ package me.etki.es;
  */
 public interface Transition<E, ID> {
 
-    E apply(E entity, TransitionContext<ID> context);
+    E apply(E entity, TransitionContext<E, ID> context);
 }

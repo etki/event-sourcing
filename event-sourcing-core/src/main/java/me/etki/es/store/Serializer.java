@@ -1,4 +1,4 @@
-package me.etki.es.storage;
+package me.etki.es.store;
 
 import java.io.IOException;
 

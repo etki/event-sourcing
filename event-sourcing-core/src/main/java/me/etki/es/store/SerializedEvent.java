@@ -1,6 +1,6 @@
-package me.etki.es.storage;
+package me.etki.es.store;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * @author Etki {@literal <etki@etki.name>}
@@ -15,8 +15,8 @@ public class SerializedEvent {
     private String transitionType;
     private int transitionVersion;
     private String serializedTransition;
-    private Instant occurredAt;
-    private Instant acknowledgedAt;
+    private ZonedDateTime occurredAt;
+    private ZonedDateTime acknowledgedAt;
 
     public String getEntityType() {
         return entityType;
@@ -72,20 +72,20 @@ public class SerializedEvent {
         return this;
     }
 
-    public Instant getOccurredAt() {
+    public ZonedDateTime getOccurredAt() {
         return occurredAt;
     }
 
-    public SerializedEvent setOccurredAt(Instant occurredAt) {
+    public SerializedEvent setOccurredAt(ZonedDateTime occurredAt) {
         this.occurredAt = occurredAt;
         return this;
     }
 
-    public Instant getAcknowledgedAt() {
+    public ZonedDateTime getAcknowledgedAt() {
         return acknowledgedAt;
     }
 
-    public SerializedEvent setAcknowledgedAt(Instant acknowledgedAt) {
+    public SerializedEvent setAcknowledgedAt(ZonedDateTime acknowledgedAt) {
         this.acknowledgedAt = acknowledgedAt;
         return this;
     }

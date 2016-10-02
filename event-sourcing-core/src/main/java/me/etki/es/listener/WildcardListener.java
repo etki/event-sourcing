@@ -1,4 +1,7 @@
-package me.etki.es;
+package me.etki.es.listener;
+
+import me.etki.es.container.Entity;
+import me.etki.es.container.Event;
 
 import java.util.concurrent.CompletableFuture;
 

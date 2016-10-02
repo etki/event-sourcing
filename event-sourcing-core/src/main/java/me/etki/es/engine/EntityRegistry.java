@@ -1,5 +1,7 @@
-package me.etki.es;
+package me.etki.es.engine;
 
+import me.etki.es.container.EntityDescriptor;
+import me.etki.es.container.EntityType;
 import me.etki.es.exception.DuplicatedEntityException;
 import me.etki.es.exception.UnregisteredEntityException;
 
@@ -17,7 +19,7 @@ public class EntityRegistry {
     private final Map<Class, EntityDescriptor> classMapping = new HashMap<>();
     private final Map<String, EntityDescriptor> typeMapping = new HashMap<>();
 
-    public <E, ID> EntityDescriptor<E, ID> getDescriptor(Class<E> entityClass) {
+    public <E, ID> EntityDescriptor<E, ID> getDescriptor(Class<E> entityClass) throws UnregisteredEntityException {
         // safe by design until (todo) someone starts poking with wrong ID class
         EntityDescriptor<E, ID> registration = (EntityDescriptor<E, ID>) classMapping.get(entityClass);
         if (registration == null) {
@@ -26,7 +28,7 @@ public class EntityRegistry {
         return registration;
     }
 
-    public <E, ID> EntityDescriptor<E, ID> getDescriptor(String entityType) {
+    public <E, ID> EntityDescriptor<E, ID> getDescriptor(String entityType) throws UnregisteredEntityException {
         // totally not safe :shruggie: todo
         EntityDescriptor<E, ID> registration = (EntityDescriptor<E, ID>) typeMapping.get(entityType);
         if (registration == null) {
@@ -35,20 +37,19 @@ public class EntityRegistry {
         return registration;
     }
 
-    public <E, ID> EntityRegistry register(EntityDescriptor<E, ID> registration) {
-        if (typeMapping.containsKey(registration.getEntityType())) {
-            EntityDescriptor descriptor = typeMapping.get(registration.getEntityType());
-            String message = "Tried to register entity " + registration.getEntityClass().getSimpleName() +
-                    " under type `" + descriptor.getEntityType() + "`, which has already been occupied by entity " +
-                    descriptor.getEntityClass().getSimpleName();
+    public <E, ID> EntityRegistry register(EntityDescriptor<E, ID> registration) throws DuplicatedEntityException {
+        if (typeMapping.containsKey(registration.getEntityType().getEntityType())) {
+            EntityDescriptor descriptor = typeMapping.get(registration.getEntityType().getEntityType());
+            String message = "Tried to register entity " + registration.getEntityType() + ", but that type " +
+                    "has already been occupied by entity " + descriptor.getEntityType();
             throw new DuplicatedEntityException(message);
         }
-        if (classMapping.containsKey(registration.getEntityClass())) {
-            String message = "Tried to register entity " + registration.getEntityClass().getSimpleName() + " twice";
+        if (classMapping.containsKey(registration.getEntityType().getEntityClass())) {
+            String message = "Tried to register entity " + registration.getEntityType() + " twice";
             throw new DuplicatedEntityException(message);
         }
-        classMapping.put(registration.getEntityClass(), registration);
-        typeMapping.put(registration.getEntityType(), registration);
+        classMapping.put(registration.getEntityType().getEntityClass(), registration);
+        typeMapping.put(registration.getEntityType().getEntityType(), registration);
         return this;
     }
 
@@ -56,6 +57,7 @@ public class EntityRegistry {
         Optional
                 .ofNullable(classMapping.remove(entityClass))
                 .map(EntityDescriptor::getEntityType)
+                .map(EntityType::getEntityType)
                 .ifPresent(typeMapping::remove);
         return this;
     }
@@ -63,7 +65,8 @@ public class EntityRegistry {
     public EntityRegistry removeDescriptor(String type) {
         Optional
                 .ofNullable(typeMapping.remove(type))
-                .map(EntityDescriptor::getEntityClass)
+                .map(EntityDescriptor::getEntityType)
+                .map(EntityType::getEntityClass)
                 .ifPresent(classMapping::remove);
         return this;
     }

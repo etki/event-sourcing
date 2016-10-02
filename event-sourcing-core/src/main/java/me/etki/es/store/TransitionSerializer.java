@@ -1,11 +1,12 @@
-package me.etki.es.storage;
+package me.etki.es.store;
 
-import me.etki.es.EntityDescriptor;
-import me.etki.es.EntityRegistry;
-import me.etki.es.Event;
 import me.etki.es.Transition;
-import me.etki.es.EventDescriptor;
 import me.etki.es.concurrent.CompletableFutures;
+import me.etki.es.container.EntityDescriptor;
+import me.etki.es.container.EntityId;
+import me.etki.es.container.Event;
+import me.etki.es.container.TransitionTypeDescriptor;
+import me.etki.es.engine.EntityRegistry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,30 +60,30 @@ public class TransitionSerializer {
     }
 
     private <E, ID> SerializedEvent serializeInternal(Event<E, ID> event) throws IOException {
-        EntityDescriptor<E, ID> registration = registry.getDescriptor(event.getEntityClass());
-        @SuppressWarnings("unchecked") // safe by design
-        Class<Transition<E, ID>> eventClass = (Class<Transition<E, ID>>) event.getTransition().getClass();
-        EventDescriptor<E, ID> eventDescriptor = registration.getEventDescriptor(eventClass);
         return new SerializedEvent()
-                .setEntityType(registration.getEntityType())
-                .setEntityId(registration.getIdentifierConverter().encode(event.getEntityId()))
+                .setEntityType(event.getEntityType().getEntityType())
+                .setEntityId(event.getEntityId().getEncodedId())
                 .setIndex(event.getIndex())
-                .setTransitionType(eventDescriptor.getEventType())
-                .setTransitionVersion(eventDescriptor.getEventVersion())
+                .setTransitionType(event.getTransitionType().getTransitionType())
+                .setTransitionVersion(event.getTransitionType().getTransitionTypeVersion())
                 .setSerializedTransition(serializer.serialize(event.getTransition()))
                 .setOccurredAt(event.getOccurredAt())
                 .setAcknowledgedAt(event.getAcknowledgedAt());
     }
 
     private <E, ID> Event<E, ID> deserializeInternal(SerializedEvent event) throws IOException {
-        EntityDescriptor<E, ID> registration = registry.getDescriptor(event.getEntityType());
-        EventDescriptor<E, ID> eventDescriptor
-                = registration.getEventDescriptor(event.getTransitionType(), event.getTransitionVersion());
+        EntityDescriptor<E, ID> descriptor = registry.getDescriptor(event.getEntityType());
+        TransitionTypeDescriptor<E, ID> transitionType = descriptor
+                .getTransitionType(event.getTransitionType(), event.getTransitionVersion());
+        Transition<E, ID> transition = serializer
+                .deserialize(event.getSerializedTransition(), transitionType.getTransitionClass());
+        ID entityId = descriptor.getIdentifierConverter().decode(event.getEntityId());
         return new Event<E, ID>()
-                .setEntityClass(registration.getEntityClass())
-                .setEntityId(registration.getIdentifierConverter().decode(event.getEntityId()))
+                .setEntityType(descriptor.getEntityType())
+                .setEntityId(new EntityId<>(entityId, event.getEntityId()))
                 .setIndex(event.getIndex())
-                .setTransition(serializer.deserialize(event.getSerializedTransition(), eventDescriptor.getEventClass()))
+                .setTransitionType(transitionType)
+                .setTransition(transition)
                 .setOccurredAt(event.getOccurredAt())
                 .setAcknowledgedAt(event.getAcknowledgedAt());
     }
