@@ -17,7 +17,7 @@ package me.etki.es;
  * transition with single-item collection. This allows engine to perform read repairs, which, if applied on all
  * entities, will let end developer to get rid of obsolete transition.
  *
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */

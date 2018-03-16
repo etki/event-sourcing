@@ -1,72 +1,37 @@
 package me.etki.es.container;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import java.time.ZonedDateTime;
 
 /**
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */
+@Accessors(chain = true)
+@EqualsAndHashCode(of = {"entityType", "entityId", "index"})
 public class TransitionContext<E, ID> {
 
+    @Getter
+    @Setter
     private EntityId<ID> entityId;
+    @Getter
+    @Setter
     private EntityType<E> entityType;
+    @Getter
+    @Setter
     private TransitionTypeDescriptor<E, ID> transitionType;
+    @Getter
+    @Setter
     private long index;
+    @Getter
+    @Setter
     private ZonedDateTime occurredAt;
+    @Getter
+    @Setter
     private ZonedDateTime acknowledgedAt;
-
-    public EntityId<ID> getEntityId() {
-        return entityId;
-    }
-
-    public TransitionContext<E, ID>  setEntityId(EntityId<ID> entityId) {
-        this.entityId = entityId;
-        return this;
-    }
-
-    public EntityType<E> getEntityType() {
-        return entityType;
-    }
-
-    public TransitionContext<E, ID>  setEntityType(EntityType<E> entityType) {
-        this.entityType = entityType;
-        return this;
-    }
-
-    public TransitionTypeDescriptor<E, ID> getTransitionType() {
-        return transitionType;
-    }
-
-    public TransitionContext<E, ID>  setTransitionType(TransitionTypeDescriptor<E, ID> transitionType) {
-        this.transitionType = transitionType;
-        return this;
-    }
-
-    public long getIndex() {
-        return index;
-    }
-
-    public TransitionContext<E, ID>  setIndex(long index) {
-        this.index = index;
-        return this;
-    }
-
-    public ZonedDateTime getOccurredAt() {
-        return occurredAt;
-    }
-
-    public TransitionContext<E, ID>  setOccurredAt(ZonedDateTime occurredAt) {
-        this.occurredAt = occurredAt;
-        return this;
-    }
-
-    public ZonedDateTime getAcknowledgedAt() {
-        return acknowledgedAt;
-    }
-
-    public TransitionContext<E, ID>  setAcknowledgedAt(ZonedDateTime acknowledgedAt) {
-        this.acknowledgedAt = acknowledgedAt;
-        return this;
-    }
 }

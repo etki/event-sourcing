@@ -8,7 +8,7 @@ import me.etki.es.store.SerializedSnapshotStore;
 import me.etki.es.store.Serializer;
 
 /**
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */

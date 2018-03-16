@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * This listener, once registered, will be fed with all events that were successfully applied.
  *
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */

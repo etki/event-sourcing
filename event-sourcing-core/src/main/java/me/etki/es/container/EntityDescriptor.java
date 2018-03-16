@@ -4,7 +4,7 @@ import me.etki.es.Transition;
 import me.etki.es.store.IdentifierConverter;
 
 /**
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */

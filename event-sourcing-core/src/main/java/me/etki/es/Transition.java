@@ -28,7 +28,7 @@ import me.etki.es.container.TransitionContext;
  * @see Event
  * @see EntityDescriptor
  *
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */

@@ -6,7 +6,7 @@ import me.etki.es.container.Event;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */

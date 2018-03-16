@@ -1,27 +1,17 @@
 package me.etki.es.container;
 
-/**
- * @author Etki {@literal <etki@etki.name>}
- * @version %I%, %G%
- * @since 0.1.0
- */
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@EqualsAndHashCode
 public class EntityId<ID> {
 
+    @Getter
     private final ID id;
+    @Getter
     private final String encodedId;
-
-    public EntityId(ID id, String encodedId) {
-        this.id = id;
-        this.encodedId = encodedId;
-    }
-
-    public ID getId() {
-        return id;
-    }
-
-    public String getEncodedId() {
-        return encodedId;
-    }
 
     // hooray, i've saved couple of bytes
 

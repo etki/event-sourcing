@@ -1,50 +1,36 @@
 package me.etki.es.container;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 /**
- * @author Etki {@literal <etki@etki.name>}
+ * @author Etki {@literal <etki@etki.me>}
  * @version %I%, %G%
  * @since 0.1.0
  */
+@Accessors(chain = true)
 public class EntityDirectorSettings {
 
+    @Getter
+    @Setter
     private int snapshotThreshold = 25;
+    @Setter
     private boolean awaitListeners = true;
+    @Setter
     private boolean propagateListenerExceptions = true;
+    @Setter
     private boolean awaitSnapshotGeneration = true;
 
-    public int getSnapshotThreshold() {
-        return snapshotThreshold;
-    }
-
-    public EntityDirectorSettings setSnapshotThreshold(int snapshotThreshold) {
-        this.snapshotThreshold = snapshotThreshold;
-        return this;
+    public boolean shouldAwaitSnapshotGeneration() {
+        return this.awaitSnapshotGeneration;
     }
 
     public boolean shouldAwaitListeners() {
         return awaitListeners;
     }
 
-    public EntityDirectorSettings setAwaitListeners(boolean awaitListeners) {
-        this.awaitListeners = awaitListeners;
-        return this;
-    }
-
     public boolean shouldPropagateListenerExceptions() {
-        return propagateListenerExceptions;
-    }
-
-    public EntityDirectorSettings setPropagateListenerExceptions(boolean propagateListenerExceptions) {
-        this.propagateListenerExceptions = propagateListenerExceptions;
-        return this;
-    }
-
-    public boolean shouldAwaitSnapshotGeneration() {
-        return awaitSnapshotGeneration;
-    }
-
-    public EntityDirectorSettings setAwaitSnapshotGeneration(boolean awaitSnapshotGeneration) {
-        this.awaitSnapshotGeneration = awaitSnapshotGeneration;
-        return this;
+        return this.propagateListenerExceptions;
     }
 }
