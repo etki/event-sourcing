@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    working_directory: /tmp/workspace
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout
+      - run: mvn -B test
+      - run: mvn -B integration-test
+      - run: mvn -B install -Dmaven.test.skip=true
+      - run: mvn -B site
+      # TODO: automate all the things
+      - store_artifacts:
+          path: event-sourcing-core/target/site
+          destination: core
+      - store_artifacts:
+          path: event-sourcing-discovery/target/site
+          destination: discovery
+      - store_artifacts:
+          path: event-sourcing-jackson-serializer/target/site
+          destination: jackson-serializer
