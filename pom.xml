@@ -9,9 +9,10 @@
     <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
-        <module>event-sourcing-core</module>
-        <module>event-sourcing-discovery</module>
-        <module>event-sourcing-jackson-serializer</module>
+        <module>core</module>
+        <module>discovery</module>
+        <module>jackson-serializer</module>
+        <module>bundle</module>
     </modules>
 
     <properties>
