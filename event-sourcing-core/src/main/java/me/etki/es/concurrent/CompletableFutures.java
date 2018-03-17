@@ -31,8 +31,8 @@ public class CompletableFutures {
     public static <T> CompletableFuture<T> wrapExecution(Callable<T> callable) {
         try {
             return completed(callable.call());
-        } catch (Exception throwable) {
-            return exceptional(throwable);
+        } catch (Exception exception) {
+            return exceptional(exception);
         }
     }
 

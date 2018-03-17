@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
  * @version %I%, %G%
  * @since 0.1.0
  */
-public interface PurgingEventStore {
+public interface PurgingEventStore extends SerializedEventStore {
 
     /**
      * Drops all events for specified events.

@@ -13,7 +13,7 @@ public interface SerializedEventStore {
     /**
      * Returns number of events in storage. Please note that this is (usually) different from event count: in case of
      * storage failure some records may be lost and this method may legally return value lower than
-     * {@link #getMaxEventNumber}.
+     * {@link #getMaximumEventNumber}.
      *
      * @param entityType Entity type.
      * @param entityId Encoded entity id.
@@ -30,7 +30,7 @@ public interface SerializedEventStore {
      *
      * @return CompletableFuture-wrapped maximum event number.
      */
-    CompletableFuture<Long> getMaxEventNumber(String entityType, String entityId);
+    CompletableFuture<Long> getMaximumEventNumber(String entityType, String entityId);
 
     /**
      * Simply returns slice of serialized events in ascending order.

@@ -1,17 +1,11 @@
 package me.etki.es.engine;
 
+import lombok.RequiredArgsConstructor;
 import me.etki.es.EntityDirector;
 import me.etki.es.EventStream;
 import me.etki.es.Transition;
 import me.etki.es.concurrent.CompletableFutures;
-import me.etki.es.container.Entity;
-import me.etki.es.container.EntityDirectorSettings;
-import me.etki.es.container.EntityId;
-import me.etki.es.container.EntityType;
-import me.etki.es.container.Event;
-import me.etki.es.container.Snapshot;
-import me.etki.es.exception.UnregisteredEntityException;
-import me.etki.es.exception.UnregisteredTransitionException;
+import me.etki.es.container.*;
 import me.etki.es.listener.EntityListener;
 import me.etki.es.listener.WildcardListener;
 import me.etki.es.store.EventStorage;
@@ -31,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version %I%, %G%
  * @since 0.1.0
  */
+@SuppressWarnings("squid:S00119")
+@RequiredArgsConstructor
 public class StandardEntityDirector implements EntityDirector {
 
     private final Map<Class, Set<EntityListener>> entityListeners = new ConcurrentHashMap<>();
@@ -41,26 +37,13 @@ public class StandardEntityDirector implements EntityDirector {
     private final EntityRegistry registry;
     private final EntityDirectorSettings settings;
 
-    public StandardEntityDirector(
-            EventStorage events,
-            SnapshotStorage snapshots,
-            EntityRegistry registry,
-            EntityDirectorSettings settings) {
-
-        this.events = events;
-        this.snapshots = snapshots;
-        this.registry = registry;
-        this.settings = settings;
-    }
-
     @Override
     public <E, ID> CompletableFuture<Boolean> append(
             Class<E> entityClass,
             ID entityId,
             Transition<E, ID> transition,
             ZonedDateTime occurredAt,
-            ZonedDateTime acknowledgedAt)
-            throws UnregisteredEntityException, UnregisteredTransitionException {
+            ZonedDateTime acknowledgedAt) {
 
         EntityType<E> type = getEntityType(entityClass);
         EntityId<ID> id = getEntityId(entityClass, entityId);
@@ -68,28 +51,26 @@ public class StandardEntityDirector implements EntityDirector {
     }
 
     @Override
-    public <E, ID> CompletableFuture<Entity<E, ID>> get(Class<E> entityClass, ID entityId)
-            throws UnregisteredEntityException {
+    public <E, ID> CompletableFuture<Entity<E, ID>> get(Class<E> entityClass, ID entityId) {
 
         EntityType<E> type = getEntityType(entityClass);
         EntityId<ID> id = getEntityId(entityClass, entityId);
         return snapshots
                 .getLast(type, id)
-                .thenCompose(snapshot -> restoreFromSnapshot(snapshot, type, id, Long.MAX_VALUE));
+                .thenCompose(snapshot -> assemble(snapshot, type, id, Long.MAX_VALUE));
     }
 
     @Override
-    public <E, ID> CompletableFuture<Entity<E, ID>> getAt(Class<E> entityClass, ID entityId, long version)
-            throws UnregisteredEntityException {
+    public <E, ID> CompletableFuture<Entity<E, ID>> getAt(Class<E> entityClass, ID entityId, long version) {
 
         EntityType<E> type = getEntityType(entityClass);
         EntityId<ID> id = getEntityId(entityClass, entityId);
         return snapshots
                 .getLastUpTo(type, id, version)
-                .thenCompose(snapshot -> restoreFromSnapshot(snapshot, type, id, version));
+                .thenCompose(snapshot -> assemble(snapshot, type, id, version));
     }
 
-    private <E, ID> CompletableFuture<Entity<E, ID>> restoreFromSnapshot(
+    private <E, ID> CompletableFuture<Entity<E, ID>> assemble(
             Snapshot<E, ID> snapshot,
             EntityType<E> entityType,
             EntityId<ID> entityId,
@@ -134,13 +115,12 @@ public class StandardEntityDirector implements EntityDirector {
     }
 
     @Override
-    public <E, ID> EventStream<E, ID> getEventStream(Class<E> entityClass, ID entityId) throws UnregisteredEntityException {
+    public <E, ID> EventStream<E, ID> getEventStream(Class<E> entityClass, ID entityId) {
         return events.getStream(getEntityType(entityClass), getEntityId(entityClass, entityId));
     }
 
     @Override
-    public <E, ID> CompletableFuture<Void> purge(Class<E> entityClass, ID entityId)
-            throws UnregisteredEntityException, UnsupportedOperationException {
+    public <E, ID> CompletableFuture<Void> purge(Class<E> entityClass, ID entityId) {
 
         if (!events.supportsPurge()) {
             throw new UnsupportedOperationException("Current event store doesn't support purge functionality");
@@ -154,8 +134,7 @@ public class StandardEntityDirector implements EntityDirector {
     }
 
     @Override
-    public <E, ID> CompletableFuture<Void> snapshot(Class<E> entityClass, ID entityId, long index)
-            throws UnregisteredEntityException {
+    public <E, ID> CompletableFuture<Void> snapshot(Class<E> entityClass, ID entityId, long index) {
 
         return getAt(entityClass, entityId, index)
                 .thenCompose(entity -> {
@@ -175,15 +154,13 @@ public class StandardEntityDirector implements EntityDirector {
     }
 
     @Override
-    public <E, ID> CompletableFuture<Void> deleteSnapshot(Class<E> entityClass, ID entityId, long index)
-            throws UnregisteredEntityException, UnsupportedOperationException {
+    public <E, ID> CompletableFuture<Void> deleteSnapshot(Class<E> entityClass, ID entityId, long index) {
 
         return snapshots.delete(getEntityType(entityClass), getEntityId(entityClass, entityId), index);
     }
 
     @Override
-    public CompletableFuture<List<StoredEntity>> getStoredEntities(long skip, long size)
-            throws UnsupportedOperationException {
+    public CompletableFuture<List<StoredEntity>> getStoredEntities(long skip, long size) {
 
         if (events.supportsBrowsing()) {
             String message = "Current event storage implementation doesn't provide entity browsing functionality";
@@ -193,7 +170,7 @@ public class StandardEntityDirector implements EntityDirector {
     }
 
     @Override
-    public CompletableFuture<Long> countStoredEntities() throws UnsupportedOperationException {
+    public CompletableFuture<Long> countStoredEntities() {
         if (!events.supportsBrowsing()) {
             String message = "Current event storage implementation doesn't provide entity browsing functionality";
             throw new UnsupportedOperationException(message);
@@ -209,7 +186,6 @@ public class StandardEntityDirector implements EntityDirector {
         String encodedId = registry.<E, ID>getDescriptor(entityClass).getIdentifierConverter().encode(entityId);
         return EntityId.of(entityId, encodedId);
     }
-
 
     @Override
     public boolean supportsBrowsing() {

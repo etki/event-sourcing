@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
  * @version %I%, %G%
  * @since 0.1.0
  */
-public interface BrowseableEventStore {
+public interface BrowseableEventStore extends SerializedEventStore {
 
     /**
      * Retrieves description of stored entities.

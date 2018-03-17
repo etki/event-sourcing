@@ -52,7 +52,7 @@ public class EventStorage {
     }
 
     public <E, ID> CompletableFuture<Long> getMaxEventNumber(EntityType<E> entityType, EntityId<ID> entityId) {
-        return store.getMaxEventNumber(entityType.getEntityType(), entityId.getEncodedId());
+        return store.getMaximumEventNumber(entityType.getEntityType(), entityId.getEncodedId());
     }
 
     public <E, ID> CompletableFuture<List<Event<E, ID>>> getSlice(
